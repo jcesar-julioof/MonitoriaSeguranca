@@ -1,0 +1,131 @@
+! Roteador da Esquerda - 192.168.1.1/30
+
+1. enable
+2. config
+
+! Criando nome e acesso para o roteador:
+3. hostname resquerda.empresa.com
+4. 	line con 0
+5. 	password cisco
+6.  	login
+7. exit
+
+8. service password-encryption
+9.  	ip domain-name sesquerda.empresa.com
+10. 	crypto key generate rsa ! responda 512
+11. 	username <usuario> secret <senha> ! Ex: username admin secret cisco 
+12. 	ip ssh version 2
+13. 	ip access-list extended SSH_ONLY
+14. 	permit tcp 192.168.0.0 0.255.255.255 any eq 22
+15. 	deny ip any any
+16. exit
+
+! Configurando acesso SSH
+17. line vty 0 15
+18. 	login local
+19. 	transport input ssh
+20. 	access-class SSH_ONLY in
+21. exit
+
+! Configurando Interfaces:
+22. interface GigabitEthernet 0/0/0 ! Interface LAN
+23.	ip address 192.168.0.1 255.255.255.0
+24.	ip access-group 120 in
+25.	access-class SSH_ONLY in
+26.	ip access-group 110 out
+27.	no shutdown
+28. exit
+
+29. interface GigabitEthernet 0/0/1 ! Interface WAN
+30.	ip address 192.168.1.1 255.255.255.252
+31.	no shutdown
+32. exit
+
+33. ip route 10.0.0.0 255.255.0.0 192.168.1.2
+
+! access-list <numero> permit icmp <origem> <destino> <tipo-icmp-opcional>
+
+! Fazendo as access-list de entrada:
+34. access-list 110 permit tcp any any eq 443
+35. permit tcp 192.168.0.0 0.0.0.255 host 192.168.0.1 eq 22
+36. deny tcp any any eq 22
+37. access-list 110 permit icmp any any
+38. access-list 110 permit icmp any any echo
+39. access-list 110 permit icmp any any echo-reply
+
+! Fazendo as access-list de saída:
+40. access-list 110 permit udp any any eq domain
+41. access-list 120 permit tcp any any eq 6568
+42. access-list 120 permit tcp any any established
+43. access-list 120 permit udp any eq domain any
+44. access-list 120 permit tcp any any eq 443
+45. access-list 120 permit tcp any any eq 22
+46. access-list 120 permit udp any eq domain any	
+47. access-list 120 permit icmp any any
+48. access-list 120 permit icmp any any echo
+49. access-list 120 permit icmp any any echo-reply
+
+! Roteador da Direita - 192.168.1.2/30
+
+1. enable
+2. config
+
+! Criando nome e acesso para o roteador:
+3. hostname rdireita.empresa.com
+4. 	line con 0
+5. 	password cisco
+6.  	login
+7. exit
+
+8. service password-encryption
+9.  	ip domain-name sdireita.empresa.com
+10. 	crypto key generate rsa ! responda 512
+11. 	username <usuario> secret <senha> ! Ex: username admin secret cisco 
+12. 	ip ssh version 2
+13. 	ip access-list extended SSH_ONLY
+14. 	permit tcp 10.0.0.0 255.255.0.0 any eq 22
+15. 	deny ip any any
+16. exit
+
+! Configurando acesso SSH
+17. line vty 0 15
+18. 	login local
+19. 	transport input ssh
+20. 	access-class SSH_ONLY in
+21. exit
+
+! Configurar Interfaces: 
+22. interface GigabitEthernet 0/0/0 ! Interface LAN
+23.	ip address 10.0.0.1 255.255.0.0
+24.	ip access-group 120 in
+25.	ip access-group 110 out
+26.	no shutdown
+27. exit
+
+28. interface GigabitEthernet 0/0/1
+29.	ip address 192.168.1.2 255.255.255.252
+30.	no shutdown
+31. exit
+
+! Fazendo reconhecimento da outra rede:
+32. ip route 192.168.0.0 255.255.255.0 192.168.1.1
+
+! Fazendo as access-list de entrada:
+34. access-list 110 permit tcp any any eq 443
+35. permit tcp 192.168.0.0 0.0.0.255 host 192.168.0.1 eq 22
+36. deny tcp any any eq 22
+37. access-list 110 permit icmp any any
+38. access-list 110 permit icmp any any echo
+39. access-list 110 permit icmp any any echo-reply
+
+! Fazendo as access-list de saída:
+40. access-list 110 permit udp any any eq domain
+41. access-list 120 permit tcp any any eq 6568
+42. access-list 120 permit tcp any any established
+43. access-list 120 permit udp any eq domain any
+44. access-list 120 permit tcp any any eq 443
+45. access-list 120 permit tcp any any eq 22
+46. access-list 120 permit udp any eq domain any	
+47. access-list 120 permit icmp any any
+48. access-list 120 permit icmp any any echo
+49. access-list 120 permit icmp any any echo-reply
