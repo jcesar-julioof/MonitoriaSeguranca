@@ -35,7 +35,7 @@ Equipamento monitorado
 12. Insira um computador em cada switch na vlan administrativo e configure estes equipamentos para pegar endereço via DHCP.
 13. Verifique a conectividade em cada uma das VLANs.
 
-![Script para utilizado:]()
+[Script para utilizado:]()
 
 ### Atividade 2
 
