@@ -75,3 +75,5 @@ Para realizar a atividade 3, será necessário entender:
 - [Configurar listas de acesso IP](https://www.cisco.com/c/pt_br/support/docs/security/ios-firewall/23602-confaccesslists.html)
 - [RFC (Request for Comments), o RFC 1700](https://www.ietf.org/rfc/rfc1700.txt?number=1700)
 - [Registro de Nomes de Serviço e Números de Porta de Protocolo de Transporte](https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?&page=1)
+
+<img width="1179" height="703" alt="image" src="https://github.com/user-attachments/assets/28eb90bb-9b14-4f79-bde7-d47aff55816f" />
